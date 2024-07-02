@@ -2,11 +2,12 @@ import { FaCompassDrafting } from "react-icons/fa6";
 import "./App.css";
 import { FaGithub, FaPlane } from "react-icons/fa";
 import MapComponent from "./components/MapComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [clickedCoords, setClickedCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [clickedCoords, setClickedCoords] = useState<{ lat: number; lng: number } | null>({ lat: 37.3688, lng: -122.0363 });
   const [rangeValue, setRangeValue] = useState(1); // Initialize range value to 1 hour
+  const [cityName, setCityName] = useState<string>('Loading...');
 
   const handleGlobeClick = (coords: { lat: number; lng: number }, event: MouseEvent) => {
     setClickedCoords(coords);
@@ -14,6 +15,25 @@ function App() {
 
   const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRangeValue(Number(event.target.value)); // Update range value state
+  };
+
+  useEffect(() => {
+    const fetchCityName = async () => {
+      setCityName('Loading...');
+      if (clickedCoords) {
+        const name = await getCityName(clickedCoords);
+        setCityName(name);
+      } else {
+        setCityName("Error...");
+      }
+    };
+    fetchCityName();
+  }, [clickedCoords]);
+
+  const getCityName = async (coords: { lat: number; lng: number }): Promise<string> => {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`);
+    const data = await response.json();
+    return data.address.city || data.address.town || data.address.village || 'Unknown location';
   };
 
   return (
@@ -46,11 +66,11 @@ function App() {
             id="rangePanel"
             className="bg-base-100 col-start-2 shadow-md pointer-events-auto p-4 rounded flex flex-col gap-2">
             <div className="flex flex-col gap-0">
-            <div className="text-2xl text-center flex flex-row justify-center gap-2 pr-8">
+            <div className="text-2xl text-center flex flex-row justify-center gap-2 pr-8 select-none">
                 <div className="font-semibold flex-1 text-right">{rangeValue}</div>
                 <div className="font-light text-neutral-500 flex-1 text-left"> {rangeValue > 1 ? "hours" : "hour"}</div>
             </div>
-            <div className="text-xs text-center flex flex-row justify-center gap-1 pr-10">
+            <div className="text-xs text-center flex flex-row justify-center gap-1 pr-10 select-none">
                 <div className="font-semibold flex-1 text-right text-neutral-500">{(rangeValue*500).toLocaleString()}</div>
                 <div className="font-light text-neutral-500 flex-grow-0 text-left"> miles</div>
             </div>
@@ -65,7 +85,7 @@ function App() {
                 className="range pointer-events-auto"
                 step="1"
               />
-              <div className="flex w-full justify-between px-2 text-xs">
+              <div className="flex w-full justify-between px-2 text-xs select-none">
                 <span>1hr</span>
                 <span>3hr</span>
                 <span>5hr</span>
@@ -83,26 +103,14 @@ function App() {
                   type="text"
                   className="grow text-2xl font-medium text-center"
                   placeholder="Search"
-                  value="Sunnyvale, CA"
+                  value={cityName} // Display city name here
+                  readOnly // Make the input read-only
                 />
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-4 w-4 opacity-70">
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
-                  />
-                </svg> */}
               </label>
             </div>
-            {/* <div id="Info 2" className="flex flex-col flex-1 bg-blue-200"></div>
-            <div id="Info 3" className="flex flex-col flex-1 bg-red-200"></div> */}
           </div>
         </div>
-        <MapComponent onGlobeClick={handleGlobeClick} />
+        <MapComponent onGlobeClick={handleGlobeClick} markerCoords={clickedCoords} rangeInMiles={rangeValue * 500}/>
       </div>
     </div>
   );
