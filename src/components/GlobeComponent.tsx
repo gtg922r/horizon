@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import Globe, { GlobeMethods } from "react-globe.gl";
 
-interface MapComponentProps {
+interface GlobeComponentProps {
   onGlobeClick?: (coords: { lat: number; lng: number }, event: MouseEvent) => void;
   markerCoords?: { lat: number; lng: number };
   rangeInMiles?: number; // New prop for range in miles
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ onGlobeClick, markerCoords, rangeInMiles }) => {
+const GlobeComponent: React.FC<GlobeComponentProps> = ({ onGlobeClick, markerCoords, rangeInMiles }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<GlobeMethods>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -146,4 +146,4 @@ useEffect(() => {
   );
 };
 
-export default MapComponent;
+export default GlobeComponent;
