@@ -5,7 +5,7 @@ import { FaGithub, FaGlobe, FaMap, FaPlane } from "react-icons/fa";
 import MapComponent from "./components/MapBoxMapComponent";
 // import MapComponent from "./components/DeckMapComponent";
 import { useEffect, useState } from "react";
-
+import { Sun, Moon, MoonStars, Globe, GlobeHemisphereWest, MapTrifold, AirplaneInFlight, CompassTool, Airplane } from "@phosphor-icons/react";
 function App() {
     const [clickedCoords, setClickedCoords] = useState<{ lat: number; lng: number } | null>({
         lat: 37.3688,
@@ -60,20 +60,7 @@ function App() {
                     <i>horizon</i>
                 </div>
                 <label className="flex flow-grow-0 ml-8 cursor-pointer gap-2 flex-row items-center">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <circle cx="12" cy="12" r="5" />
-                        <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-                    </svg>
+                    <Sun size={16} weight="duotone"/>
                     <input
                         type="checkbox"
                         value="light"
@@ -83,22 +70,10 @@ function App() {
                         }
                         className="toggle theme-controller toggle-xs toggle-neutral bg-gray-300 border-gray-300"
                     />
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
+                    <Moon size={16} weight="duotone"/>
                 </label>
                 <label className="flex flow-grow-0 ml-8 cursor-pointer gap-2 flex-row items-center">
-                    <FaGlobe className="h-[14px] w-[14px]" />
+                    <GlobeHemisphereWest size={16} weight="duotone" />
                     <input
                         type="checkbox"
                         value="mercator"
@@ -108,7 +83,7 @@ function App() {
                         }
                         className="toggle theme-controller toggle-xs toggle-neutral bg-gray-300 border-gray-300"
                     />
-                    <FaMap className="h-[14px] w-[14px]" />
+                    <MapTrifold size={16} weight="duotone" />
                 </label>                
                 <div className="flex-grow"></div>
                 <div className="flex-grow-0 flex flex-row items-center text-gray-300 hover:text-gray-500 transition-colors">
@@ -131,8 +106,11 @@ function App() {
                         className="bg-base-100 col-start-2 shadow-md pointer-events-auto p-4 rounded flex flex-col gap-2"
                     >
                         <div className="flex flex-col gap-0">
-                            <div className="text-2xl text-center flex flex-row justify-center gap-2 pr-8 select-none">
-                                <div className="font-semibold flex-1 text-right">{rangeValue}</div>
+                            <div className="text-2xl text-center flex flex-row justify-center gap-2 pr-2 select-none">
+                                <div className="flex-1 flex flex-row justify-end items-center">
+                                    <AirplaneInFlight size={18} weight="duotone" className="mr-2"/>
+                                    <div className="font-semibold text-right w-4">{rangeValue}</div>
+                                </div>
                                 <div className="font-light text-neutral-500 flex-1 text-left">
                                     {" "}
                                     {rangeValue > 1 ? "hours" : "hour"}
