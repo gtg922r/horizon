@@ -74,7 +74,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 latitude={rangeCenter.latitude}
                 anchor="center"
             >
-                <div className="text-lg font-medium text-base-content pb-10 drop-shadow-[0_1px_2px_rgba(255,255,255,1)]">Sunnyvale</div>
+                {/* <div className="text-lg font-medium text-neutral-content pb-10 drop-shadow-[0_1px_2px_rgba(255,255,255,1)]">Sunnyvale</div> */}
+                <div className="text-lg font-medium text-neutral-content pb-10 drop-shadow drop-shadow-neutral">Sunnyvale</div>
             </Marker>            
         </Map>
     );

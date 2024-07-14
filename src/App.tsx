@@ -6,12 +6,16 @@ import MapComponent from "./components/MapBoxMapComponent";
 // import MapComponent from "./components/DeckMapComponent";
 import { useEffect, useState } from "react";
 import { Sun, Moon, MoonStars, Globe, GlobeHemisphereWest, MapTrifold, AirplaneInFlight, CompassTool, Airplane } from "@phosphor-icons/react";
+
+const AVG_FLIGHT_SPEED_MPH = 550;
+const KILOMETERS_PER_MILE = 1.60934;
+
 function App() {
     const [clickedCoords, setClickedCoords] = useState<{ lat: number; lng: number } | null>({
         lat: 37.3688,
         lng: -122.0363,
     });
-    const [rangeValue, setRangeValue] = useState(1); // Initialize range value to 1 hour
+    const [rangeValue_hrs, setRangeValue_hrs] = useState(1); // Initialize range value to 1 hour
     const [cityName, setCityName] = useState<string>("Loading...");
     const [lightDarkMode, setLightDarkMode] = useState<"light" | "dark">("dark");
     const [selectedProjection, setSelectedProjection] = useState<"globe" | "mercator">("globe");
@@ -21,7 +25,7 @@ function App() {
     };
 
     const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRangeValue(Number(event.target.value)); // Update range value state
+        setRangeValue_hrs(Number(event.target.value)); // Update range value state
     };
 
     useEffect(() => {
@@ -60,7 +64,7 @@ function App() {
                     <i>horizon</i>
                 </div>
                 <label className="flex flow-grow-0 ml-8 cursor-pointer gap-2 flex-row items-center">
-                    <Sun size={16} weight="duotone"/>
+                    <Moon size={16} weight="duotone"/>
                     <input
                         type="checkbox"
                         value="light"
@@ -70,7 +74,7 @@ function App() {
                         }
                         className="toggle theme-controller toggle-xs toggle-neutral bg-gray-300 border-gray-300"
                     />
-                    <Moon size={16} weight="duotone"/>
+                    <Sun size={16} weight="duotone"/>
                 </label>
                 <label className="flex flow-grow-0 ml-8 cursor-pointer gap-2 flex-row items-center">
                     <GlobeHemisphereWest size={16} weight="duotone" />
@@ -109,16 +113,16 @@ function App() {
                             <div className="text-2xl text-center flex flex-row justify-center gap-2 pr-2 select-none">
                                 <div className="flex-1 flex flex-row justify-end items-center">
                                     <AirplaneInFlight size={18} weight="duotone" className="mr-2"/>
-                                    <div className="font-semibold text-right w-4">{rangeValue}</div>
+                                    <div className="font-semibold text-right w-4">{rangeValue_hrs}</div>
                                 </div>
                                 <div className="font-light text-neutral-500 flex-1 text-left">
                                     {" "}
-                                    {rangeValue > 1 ? "hours" : "hour"}
+                                    {rangeValue_hrs > 1 ? "hours" : "hour"}
                                 </div>
                             </div>
                             <div className="text-xs text-center flex flex-row justify-center gap-1 pr-10 select-none">
                                 <div className="font-semibold flex-1 text-right text-neutral-500">
-                                    {(rangeValue * 500).toLocaleString()}
+                                    {(rangeValue_hrs * AVG_FLIGHT_SPEED_MPH).toLocaleString()}
                                 </div>
                                 <div className="font-light text-neutral-500 flex-grow-0 text-left">
                                     {" "}
@@ -131,7 +135,7 @@ function App() {
                                 type="range"
                                 min={1}
                                 max={9}
-                                value={rangeValue}
+                                value={rangeValue_hrs}
                                 onChange={handleRangeChange} // Add onChange handler
                                 className="range pointer-events-auto"
                                 step="1"
@@ -162,7 +166,7 @@ function App() {
                         </div>
                     </div>
                 </div>
-                <MapComponent rangeRadius={rangeValue * 500 * 1.61} lightDarkMode={lightDarkMode} projection={selectedProjection}/>
+                <MapComponent rangeRadius={rangeValue_hrs * AVG_FLIGHT_SPEED_MPH * KILOMETERS_PER_MILE} lightDarkMode={lightDarkMode} projection={selectedProjection}/>
                 {/* <GlobeComponent onGlobeClick={handleGlobeClick} markerCoords={clickedCoords} rangeInMiles={rangeValue * 500}/> */}
             </div>
         </div>
