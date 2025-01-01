@@ -1,13 +1,12 @@
 import * as React from "react";
 import Map, { Source, Layer, Marker } from "react-map-gl";
-import type { CircleLayer, FillLayer, LineLayer } from "react-map-gl";
+import type { FillLayer, LineLayer } from "react-map-gl";
 import type { FeatureCollection } from "geojson";
-import { LayerSpecification, ProjectionSpecification } from "mapbox-gl";
 import useCircleGeoJSON from "../hooks/useCircleGeoJSON";
 import "mapbox-gl/dist/mapbox-gl.css";
 import * as MC from "../components/MapComponentShared";
 import { MapComponentProps } from "../components/MapComponentShared";
-import { Crosshair, Dot, MapPin } from "@phosphor-icons/react";
+import { Dot } from "@phosphor-icons/react";
 
 const DEFAULT_VIEW_STATE = {
     longitude: -122.0363,
@@ -18,6 +17,7 @@ const DEFAULT_VIEW_STATE = {
 const fillLayerStyle: FillLayer = {
     id: "range-overlay",
     type: "fill",
+    source: "my-data",
     paint: {
         "fill-color": "#ff0000",
         "fill-opacity": 0.05,
@@ -27,6 +27,7 @@ const fillLayerStyle: FillLayer = {
 const strokeLayerStyle: LineLayer = {
     id: "range-outline",
     type: "line",
+    source: "my-data",
     paint: {
         "line-color": "#ff0000",
         "line-width": 1,

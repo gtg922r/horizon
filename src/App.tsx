@@ -1,11 +1,9 @@
 import { FaCompassDrafting } from "react-icons/fa6";
 import "./App.css";
-import { FaGithub, FaGlobe, FaMap, FaPlane } from "react-icons/fa";
-// import GlobeComponent from "./components/GlobeComponent";
+import { FaGithub, FaPlane } from "react-icons/fa";
 import MapComponent from "./components/MapBoxMapComponent";
-// import MapComponent from "./components/DeckMapComponent";
 import { useEffect, useState } from "react";
-import { Sun, Moon, MoonStars, Globe, GlobeHemisphereWest, MapTrifold, AirplaneInFlight, CompassTool, Airplane } from "@phosphor-icons/react";
+import { Sun, Moon, GlobeHemisphereWest, MapTrifold, AirplaneInFlight } from "@phosphor-icons/react";
 
 const AVG_FLIGHT_SPEED_MPH = 550;
 const KILOMETERS_PER_MILE = 1.60934;
@@ -15,17 +13,13 @@ function App() {
         lat: 37.3688,
         lng: -122.0363,
     });
-    const [rangeValue_hrs, setRangeValue_hrs] = useState(1); // Initialize range value to 1 hour
+    const [rangeValue_hrs, setRangeValue_hrs] = useState(1);
     const [cityName, setCityName] = useState<string>("Loading...");
     const [lightDarkMode, setLightDarkMode] = useState<"light" | "dark">("dark");
     const [selectedProjection, setSelectedProjection] = useState<"globe" | "mercator">("globe");
 
-    const handleGlobeClick = (coords: { lat: number; lng: number }, event: MouseEvent) => {
-        setClickedCoords(coords);
-    };
-
     const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRangeValue_hrs(Number(event.target.value)); // Update range value state
+        setRangeValue_hrs(Number(event.target.value));
     };
 
     useEffect(() => {
@@ -136,7 +130,7 @@ function App() {
                                 min={1}
                                 max={9}
                                 value={rangeValue_hrs}
-                                onChange={handleRangeChange} // Add onChange handler
+                                onChange={handleRangeChange}
                                 className="range pointer-events-auto"
                                 step="1"
                             />
@@ -159,15 +153,14 @@ function App() {
                                     type="text"
                                     className="grow text-2xl font-medium text-center"
                                     placeholder="Search"
-                                    value={cityName} // Display city name here
-                                    readOnly // Make the input read-only
+                                    value={cityName}
+                                    readOnly
                                 />
                             </label>
                         </div>
                     </div>
                 </div>
                 <MapComponent rangeRadius={rangeValue_hrs * AVG_FLIGHT_SPEED_MPH * KILOMETERS_PER_MILE} lightDarkMode={lightDarkMode} projection={selectedProjection}/>
-                {/* <GlobeComponent onGlobeClick={handleGlobeClick} markerCoords={clickedCoords} rangeInMiles={rangeValue * 500}/> */}
             </div>
         </div>
     );
