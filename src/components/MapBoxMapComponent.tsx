@@ -42,6 +42,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         longitude: DEFAULT_VIEW_STATE.longitude,
         latitude: DEFAULT_VIEW_STATE.latitude,
     },
+    onMapClick,
 }) => {
     const rangeCircle: FeatureCollection = useCircleGeoJSON({
         center: { longitude: rangeCenter.longitude, latitude: rangeCenter.latitude },
@@ -49,6 +50,15 @@ const MapComponent: React.FC<MapComponentProps> = ({
     });
 
     const mapStyle = lightDarkMode === "light" ? MC.MAP_STYLE_LIGHT : MC.MAP_STYLE_DARK;
+
+    const handleClick = (event: any) => {
+        if (onMapClick) {
+            onMapClick({
+                lat: event.lngLat.lat,
+                lng: event.lngLat.lng,
+            });
+        }
+    };
 
     return (
         <Map
@@ -58,6 +68,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 projection === "globe" ? MC.MAP_PROJECTION_GLOBE : MC.MAP_PROJECTION_MERCATOR
             }
             mapStyle={mapStyle}
+            onClick={handleClick}
         >
             <Source id="my-data" type="geojson" data={rangeCircle}>
                 <Layer {...fillLayerStyle} />
@@ -75,7 +86,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 latitude={rangeCenter.latitude}
                 anchor="center"
             >
-                {/* <div className="text-lg font-medium text-neutral-content pb-10 drop-shadow-[0_1px_2px_rgba(255,255,255,1)]">Sunnyvale</div> */}
                 <div className="text-lg font-medium text-neutral-content pb-10 drop-shadow drop-shadow-neutral">Sunnyvale</div>
             </Marker>            
         </Map>

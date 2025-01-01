@@ -13,4 +13,5 @@ export interface MapComponentProps {
     rangeRadius: number;
     lightDarkMode: "light" | "dark";
     projection: "globe" | "mercator";
+    onMapClick?: (coords: { lat: number; lng: number }) => void;
 }

@@ -9,9 +9,9 @@ const AVG_FLIGHT_SPEED_MPH = 550;
 const KILOMETERS_PER_MILE = 1.60934;
 
 function App() {
-    const [clickedCoords, setClickedCoords] = useState<{ lat: number; lng: number } | null>({
-        lat: 37.3688,
-        lng: -122.0363,
+    const [rangeCenter, setRangeCenter] = useState({
+        latitude: 37.3688,
+        longitude: -122.0363,
     });
     const [rangeValue_hrs, setRangeValue_hrs] = useState(1);
     const [cityName, setCityName] = useState<string>("Loading...");
@@ -22,26 +22,28 @@ function App() {
         setRangeValue_hrs(Number(event.target.value));
     };
 
+    const handleMapClick = (coords: { lat: number; lng: number }) => {
+        setRangeCenter({
+            latitude: coords.lat,
+            longitude: coords.lng,
+        });
+    };
+
     useEffect(() => {
         const fetchCityName = async () => {
             setCityName("Loading...");
-            if (clickedCoords) {
-                const name = await getCityName(clickedCoords);
-                setCityName(name);
-            } else {
-                setCityName("Error...");
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${rangeCenter.latitude}&lon=${rangeCenter.longitude}`
+                );
+                const data = await response.json();
+                setCityName(data.address.city || data.address.town || data.address.village || "Unknown location");
+            } catch (error) {
+                setCityName("Error loading location");
             }
         };
         fetchCityName();
-    }, [clickedCoords]);
-
-    const getCityName = async (coords: { lat: number; lng: number }): Promise<string> => {
-        const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
-        );
-        const data = await response.json();
-        return data.address.city || data.address.town || data.address.village || "Unknown location";
-    };
+    }, [rangeCenter]);
 
     return (
         <div
@@ -160,7 +162,13 @@ function App() {
                         </div>
                     </div>
                 </div>
-                <MapComponent rangeRadius={rangeValue_hrs * AVG_FLIGHT_SPEED_MPH * KILOMETERS_PER_MILE} lightDarkMode={lightDarkMode} projection={selectedProjection}/>
+                <MapComponent 
+                    rangeRadius={rangeValue_hrs * AVG_FLIGHT_SPEED_MPH * KILOMETERS_PER_MILE} 
+                    lightDarkMode={lightDarkMode} 
+                    projection={selectedProjection}
+                    rangeCenter={rangeCenter}
+                    onMapClick={handleMapClick}
+                />
             </div>
         </div>
     );
